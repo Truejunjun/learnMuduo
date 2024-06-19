@@ -1,5 +1,6 @@
 // 该文件是一个公共文件
 #include "Poller.h"
+#include "EPollPoller.h"
 #include <stdlib.h>
 
 Poller* Poller::newDefaultPoller(EventLoop *loop)
@@ -11,6 +12,6 @@ Poller* Poller::newDefaultPoller(EventLoop *loop)
 	}
 	else
 	{
-		return nullptr;	// 实现Epoll实例
+		return new EPollPoller(loop);	// 实现Epoll实例
 	}
 }

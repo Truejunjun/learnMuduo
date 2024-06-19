@@ -9,7 +9,7 @@ class Channel;		// 因为只是使用到指针成员变量，指针大小固定�
 class EventLoop;	// 也是指针类型
 
 // muduo库中多路事件分发器的核心IO复用模块
-class Poller : nocopyable
+class Poller : noncopyable
 {
 public:
 	using ChannelList = std::vector<Channel*>;
