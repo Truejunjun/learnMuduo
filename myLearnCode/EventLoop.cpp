@@ -36,6 +36,33 @@ EventLoop::EventLoop()
     }
     else
     {
+        t_loopInThisThread = this;
+    }
 
+    // 设置wakeupfd的事件类型和发生事件后的回调操作
+    wakeupChannel_ -> setReadCallback(std::bind(&EventLoop::handelRead, this));
+    // 每一个eventLoop都将监听wakeupChannel的EPOLLIN读事件
+    wakeupChannel_ -> enableReading();
+}
+
+
+// 由于其他成员是智能指针，所以调用析构函数的时候会自动del
+EventLoop::~EventLoop()
+{
+    wakeupChannel_ -> disableAll(); // 禁止所有的感兴趣事件
+    wakeupChannel_ -> remove(); // 从EventLoop中删除该channel，具体的实现在EventLoop类中
+    ::close(wakeupFd_);
+    t_loopInThisThread = nullptr;
+}
+
+
+void EventLoop::handelRead()
+{
+    uint64_t one = 1;
+    // ssize_t n = sockets::read(wakeupFd_, &one, sizeof one);
+    ssize_t n = read(wakeupFd_, &one, sizeof one);
+    if (n != sizeof one)
+    {
+        LOG_ERROR("");
     }
 }

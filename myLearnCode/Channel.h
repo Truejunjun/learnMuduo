@@ -40,7 +40,7 @@ public:
 	void disableReading() {evnets_ &= ~kReadEvent; update();}
 	void enableWriting() {events_ |= kWriteEvent; update(); }
 	void disableWriting() {evnets_ &= ~kWriteEvent; update();}	
-	void disableReading() {evnets_ = kNoneEvent; update();}
+	void disableALL() {evnets_ = kNoneEvent; update();}
 	
 	// 返回fd当前的事件状态
 	bool isNoneEvent() const {return events_ == kNoneEvent; }
