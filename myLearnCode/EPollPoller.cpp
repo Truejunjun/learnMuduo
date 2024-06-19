@@ -5,7 +5,7 @@
 #include <unistd.h>		// 使用到close函数
 #include <strings.h>	// 使用memZero的替换函数bzero
 
-const int kNew = -1;	// 状态值，表示Channel还未添加到Poller中
+const int kNew = -1;	// 状态值，表示Channel还未添加到Poller中，对应Channel中的index
 const int kAdded = 1;
 const int kDeleted = 2;
 
