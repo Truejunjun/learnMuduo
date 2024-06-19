@@ -32,7 +32,7 @@ public:
 	// 查询和设置函数
 	int fd() const {return fd_;}
 	int event() const {return events_;}
-	int set_revent(int revt) const {revents_ = revt;}	// Poller监听事件并激活Channel
+	int set_revents(int revt) const {revents_ = revt;}	// Poller监听事件并激活Channel
 	bool isNoneEvent() const {return events_ == kNoneEvent;}	// 判断是否注册事件
 	
 	// 设置fd相应的事件状态
