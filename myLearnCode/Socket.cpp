@@ -1,11 +1,13 @@
 #include "Socket.h"
 #include "Logger.h"
-#include <unistd.h> // 包含系统调用api
+#include "InetAddress.h"
 
+#include <unistd.h> // 包含系统调用api
 #include <sys/types.h>
 #include <sys/socket.h> // bind需要这两个头文件
-
 #include <string.h> // 用到bzero
+#include <netinet/tcp.h> // IPPROTO_TCP宏定义
+
 
 Socket::~Socket()
 {
@@ -58,17 +60,17 @@ void Socket::setTcpNoDelay(bool on)
 void Socket::setReuseAddr(bool on)
 {
     int optval = on ? 1 : 0;
-    ::setsockopt(sockfd_, SQL_SOCKET, TCP_REUSEADDR, &optval, sizeof optval);
+    ::setsockopt(sockfd_, SOL_SOCKET, TCP_REUSEADDR, &optval, sizeof optval);
 }
 
 void Socket::setReuseport(bool on)
 {
     int optval = on ? 1 : 0;
-    ::setsockopt(sockfd_, SQL_SOCKET, TCP_REUSEPORT, &optval, sizeof optval);
+    ::setsockopt(sockfd_, SOL_SOCKET, TCP_REUSEPORT, &optval, sizeof optval);
 }
 
 void Socket::setKeepAlive(bool on)
 {
     int optval = on ? 1 : 0;
-    ::setsockopt(sockfd_, SQL_SOCKET, TCP_KEEPALIVE, &optval, sizeof optval);
+    ::setsockopt(sockfd_, SOL_SOCKET, TCP_KEEPALIVE, &optval, sizeof optval);
 }

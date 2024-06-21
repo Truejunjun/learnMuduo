@@ -1,5 +1,6 @@
 #include "Acceptor.h"
 #include "Logger.h"
+#include "InetAddress.h"
 
 #include <sys/types.h>
 #include <sys/socket.h> // bind需要这两个头文件
@@ -8,7 +9,7 @@
 
 static int creatNonblocking()
 {
-    int sockfd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, IPPROTO_TCP);
+    int sockfd = ::socket(AF_INET, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0);
     if (sockfd < 0)
     {
         LOG_FATAL("%s:%s:%d listen socket create err :%d \n", __FILE__, __FUNCITON__, __LINE__, errno);
@@ -48,7 +49,7 @@ void Acceptor:listen()
 void Acceptor::handleRead()
 {
     InetAddress peerAddr;
-    int confd = acceptSocket_.accept(&peerAddr);    // 返回了通信用的fd
+    int confd = acceptSocket_.accept(&peerAddr);    // 返回了通信用的fd，并设定peerAddr
     if (confd > 0)
     {
         if (NewConnectionCallback_)
