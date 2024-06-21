@@ -77,4 +77,4 @@ private:
 	
 	void update();
 	void handleEventWithGuard(Timestamp receiveTime);
-}
+};

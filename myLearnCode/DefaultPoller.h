@@ -14,4 +14,4 @@ Poller* Poller::newDefaultPoller(EventLoop *loop)
 	{
 		return new EPollPoller(loop);	// 实现Epoll实例
 	}
-}
+};

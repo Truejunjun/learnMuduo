@@ -17,4 +17,4 @@ namespace CurrentThread
         }
         return t_cachedTId; // 如果已经获取过了，直接从缓存中返回
     }
-}
+};
