@@ -1,8 +1,7 @@
 #include "EventLoopThread.h"
 #include "EventLoop.h"
 
-EventLoopThread::EventLoopThread(cosnt ThreadInitCallback &cb = ThreadInitCallback(),
-    const std::string &name = std::string())
+EventLoopThread::EventLoopThread(cosnt ThreadInitCallback &cb, const std::string &name)
     : loop_(nullptr), exiting_(false), thread_(std::bind(&EventLoopThread::threadFunc, this), name),
     mutex_(), cond_(), callback_(cb)
 {

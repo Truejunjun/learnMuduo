@@ -3,7 +3,7 @@
 
 #include <semaphore.h>
 
-std::atomic_int Thread::numCreated_ = 0;    // static成员变量，在类外定义
+std::atomic_int Thread::numCreated_(0);    // static成员变量，在类外定义
 
 Thread::Thread(ThreadFunc func, const std::string &name)
     : started_(false), joined_(false), tid_(0), func_(std::move(func)), name_(name)
