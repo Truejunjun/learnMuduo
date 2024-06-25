@@ -110,7 +110,7 @@ void TcpConnection::handleClose()
 
     TcpConnectionPtr connPtr(shared_from_this());
     connectionCallback_(connPtr);   // 执行关闭的回调
-    closeCallback_(connPtr);
+    closeCallback_(connPtr);    // 关闭链接的回调，执行的是TcpServer::removeConnection回调
 }
 
 void TcpConnection::handleError()

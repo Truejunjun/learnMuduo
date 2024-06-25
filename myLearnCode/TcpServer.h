@@ -61,6 +61,7 @@ private:
     ConnectionCallback connectionCallback_; // 有新连接时的回调
     MessageCallback messageCallback_;   // 有读写消息时的回调
     WriteCompleteCallback writeCompleteCallback_;   // 消息发送完成后的回调
+    CloseCallback closeCallback_;
 
     ThreadInitCallback threadInitCallback_; // loop线程初始化的回调
     
