@@ -81,8 +81,10 @@ public:
     char* beginWrite()  { return begin() + witerIndex_; }
     const char* beginWrite() const { return begin() + witerIndex_; }
 
-    // 从fd上读取数据
+    // 从fd上读取数据，读到可写空间
     ssize_t readFd(int fd, int* saveErrno);
+	// 写入数据到fd，从可读空间读
+	ssize_t writeFd(int fd, int* saveErrno);
     
 private:
 	// 取vector数组首元素的地址

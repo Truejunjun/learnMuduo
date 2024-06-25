@@ -3,7 +3,7 @@
 
 #include <functional>
 
-inline EventLoop* checkLoopNotNull(EventLoop *loop)
+static EventLoop* checkLoopNotNull(EventLoop *loop)
 {
     if (loop == nullptr)
     {

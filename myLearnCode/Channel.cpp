@@ -17,7 +17,7 @@ Channel::Channel(EventLoop *Loop, int fd)
 Channel::~Channel() 
 {}
 
-// 什么时候会被调用？？
+// 一个TcpConnection新连接创建的时候，指针指向TCP Connection对象
 void Channel::tie(const std::shared_ptr<void>&obj)
 {
 	tie_ = obj;
@@ -56,7 +56,7 @@ void Channel::handleEvent(Timestamp receiveTime)
 void Channel::handleEventWithGuard(Timestamp receiveTime)
 {
 	// 先判断是否异常
-	if ((revents_ & EPOOLLHUP) && !(revents_ & EPOLLIN)){
+	if ((revents_ & EPOLLHUP) && !(revents_ & EPOLLIN)){
 		if (closeCallback_){
 			closeCallback_();
 		}

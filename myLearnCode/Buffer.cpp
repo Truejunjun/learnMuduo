@@ -1,6 +1,8 @@
 #include "Buffer.h"
+
 #include <sys/uio.h>
 #include <errno.h>
+#include <unistd.h>
 
 ssize_t Buffer::readFd(int fd, int* saveErrno)
 {
@@ -32,4 +34,14 @@ ssize_t Buffer::readFd(int fd, int* saveErrno)
     }
 
     return n;   // 返回读取到的字节数
+}
+
+ssize_t Buffer::writeFd(int fd, int* saveErrno)
+{
+    sszie_t n = ::write(fd, peek(), readableBytes());
+    if (n < 0)
+    {
+        *saveErrno = errno;
+    }
+    return n;
 }
