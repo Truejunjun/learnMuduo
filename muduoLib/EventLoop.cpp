@@ -19,7 +19,7 @@ const int kPollTimeMs = 10000;
 // 创建wakeupfd，用来notify唤醒subReactor处理新来的channel
 int createEventfd()
 {
-    int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
+    int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);   // 通过EFD_NONBLOCK设置为非阻塞状态，一但非0就代表发生可读事件
     if (evtfd < 0)
     {
         LOG_FATAL("eventfd err:%D \n", errno);

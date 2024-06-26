@@ -35,7 +35,7 @@ Acceptor::~Acceptor()
 }
 
 
-void Acceptor:listen()
+void Acceptor::listen()
 {
     listenning_ = true;
     acceptSocket_.listen();
