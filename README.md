@@ -208,6 +208,7 @@ TcpServer(EventLoop* loop, InetAddress &listenAddr, string nameArg, Option optio
 > 实际上，`Acceptor`在构造时设置了回调函数为自身的`Acceptor::handleRead()`，而`handleRead()`中关键执行了`newConnectionCallback`，而这个回调函数实际上是由`TcpServer`设置的自身的`TcpServer::newConnection`函数。而这个函数实际上是完成了`TcpConnection`的创建和设置，最终执行`TcpConnection::connectEstablished`
 >
 > ![img](https://github.com/Truejunjun/learnMuduo/blob/main/pictures/%E6%96%B0%E7%94%A8%E6%88%B7%E9%93%BE%E6%8E%A5%E6%A2%B3%E7%90%86.png)
+> ![img](https://github.com/Truejunjun/learnMuduo/blob/main/pictures/muduo%E5%90%AF%E5%8A%A8%E9%80%BB%E8%BE%91%E6%A2%B3%E7%90%86.png)
 
 **监听后建立新连接**：Poller监听到链接客户端的`connfd`，执行相应回调`newConnectionCallback_(connfd, peerAddr)`，该函数则首先通过轮询方法指定一个`subLoop（ioLoop）`，然后通过`connfd`获取链接的ip和端口号，创建新的`TcpConnection`类，封装`connfd`，最后完成回调函数的设置。最后走到`TcpConnection`中的`connectEstablished()`函数中。
 
