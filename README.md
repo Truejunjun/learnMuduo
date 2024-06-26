@@ -12,10 +12,10 @@
 
 <font color=blue>**EventLoop**</font>() → Reactor
 
-​	ChannelList **activeChannels**_ (vector<*Channel> 类型) \\
-​	int **wakeupFd_**	\\
-​	unique_ptr<Channel> **wakeupChannel_**	\\
-​	unique_ptr<Poller> **poller_**	\\
+​	ChannelList **activeChannels**_ (vector<*Channel> 类型)     
+​	int **wakeupFd_**     
+​	unique_ptr<Channel> **wakeupChannel_**     
+​	unique_ptr<Poller> **poller_**     
 
 > 每一个Loop都具有wakeupFd，可以通过写入8字节无用数据唤醒
 > EventLoop涵盖有下两个大类，分别是Channel和Poller
