@@ -148,7 +148,7 @@
 
 > 实际上，`Acceptor`在构造时设置了回调函数为自身的`Acceptor::handleRead()`，而`handleRead()`中关键执行了`newConnectionCallback`，而这个回调函数实际上是由`TcpServer`设置的自身的`TcpServer::newConnection`函数。而这个函数实际上是完成了`TcpConnection`的创建和设置，最终执行`TcpConnection::connectEstablished`
 >
-> [https://github.com/Truejunjun/learnMuduo/pictures/新用户链接梳理.png](https://github.com/Truejunjun/learnMuduo/blob/main/pictures/%E6%96%B0%E7%94%A8%E6%88%B7%E9%93%BE%E6%8E%A5%E6%A2%B3%E7%90%86.png)
+> ![img](https://github.com/Truejunjun/learnMuduo/blob/main/pictures/%E6%96%B0%E7%94%A8%E6%88%B7%E9%93%BE%E6%8E%A5%E6%A2%B3%E7%90%86.png)
 
 **监听后建立新连接：**Poller监听到链接客户端的`connfd`，执行相应回调`newConnectionCallback_(connfd, peerAddr)`，该函数则首先通过轮询方法指定一个`subLoop（ioLoop）`，然后通过`connfd`获取链接的ip和端口号，创建新的`TcpConnection`类，封装`connfd`，最后完成回调函数的设置。最后走到`TcpConnection`中的`connectEstablished()`函数中。
 
@@ -162,7 +162,7 @@
 
 > TcpServer就完成了connection的删除,具体channel的操作是由TcpConnection完成的
 
-[https://github.com/Truejunjun/learnMuduo/pictures/模块交互梳理.png](https://github.com/Truejunjun/learnMuduo/blob/main/pictures/%E6%A8%A1%E5%9D%97%E4%BA%A4%E4%BA%92%E6%A2%B3%E7%90%86.png)
+![img](https://github.com/Truejunjun/learnMuduo/blob/main/pictures/%E6%A8%A1%E5%9D%97%E4%BA%A4%E4%BA%92%E6%A2%B3%E7%90%86.png)
 
 
 其中关键的函数为`start()`，先启动了底层的线程池，注册了`wakeupFd`，创建并唤醒`Loop`子线程并开启`loop.loop()`。然后就执行了`acceptor.listen()`，将`acceptChannel`注册在`mainLoop`上，最终开启`mainLoop`的`loop()`。**简单来说就是**，构建`TcpServer`→`start`→运行`mainLoop`
