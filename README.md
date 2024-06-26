@@ -12,10 +12,10 @@
 
 <font color=blue>**EventLoop**</font>() → Reactor
 
-​	ChannelList **activeChannels**_ (vector<*Channel> 类型)
-​	int **wakeupFd_**
-​	unique_ptr<Channel> **wakeupChannel_**
-​	unique_ptr<Poller> **poller_**
+​	ChannelList **activeChannels**_ (vector<*Channel> 类型) \\
+​	int **wakeupFd_**	\\
+​	unique_ptr<Channel> **wakeupChannel_**	\\
+​	unique_ptr<Poller> **poller_**	\\
 
 > 每一个Loop都具有wakeupFd，可以通过写入8字节无用数据唤醒
 > EventLoop涵盖有下两个大类，分别是Channel和Poller
@@ -24,11 +24,11 @@
 
 <font color=blue>**Channel**</font>(EventLoop *loop, int fd)
 
-​	EventLoop* **loop_**
-​	int **fd_**
-​	int **events_**
-​	int **revents_**
-​	std::function<void()/...> **xxxxCallback_**
+​	EventLoop* **loop_**	\\
+​	int **fd_**	\\
+​	int **events_**	\\
+​	int **revents_**	\\
+​	std::function<void()/...> **xxxxCallback_**	\\
 
 > 实际上只存在两种Channel, 一种是listenfd→acceptorChannel, 一种是connfd→connectionChannel
 
@@ -36,13 +36,13 @@
 
 <font color=blue>**Poller **</font>(EventLoop *loop)  →  事件分发器Demultiplex
 
-​	EventLoop* **ownerloop_**
-​	unordered_map<int fd, Channel* channel> **Channels_**
+​	EventLoop* **ownerloop_**	\\
+​	unordered_map<int fd, Channel* channel> **Channels_**	\\
 
 <font color=blue>**EPollPoller**</font>(EventLoop *loop) 
 
-​	vector<epoll_event>  events_	// epoll_event是一个结构体，存发生事件events
-​	int epollfd_
+​	vector<epoll_event>  events_	// epoll_event是一个结构体，存发生事件events	\\
+​	int epollfd_	\\
 
 > 使用哈希表能使得监听查找的更快
 > Poller是基类；EPollPoller是派生类，包含Poller的具体实现
@@ -51,13 +51,13 @@
 
 <font color=blue>**Thread **</font>(functional<void()> &cb, string &name) 
 
-​	bool **started_**
-​	bool **joined_**
-​	shared_ptr< std::thread> **thread_**
-​	pid_t **tid_**
-​	fucntion<void()> **func_**
-​	string **name_**
-​	atomic_int **numCreated_**
+​	bool **started_**	\\
+​	bool **joined_**	\\
+​	shared_ptr< std::thread> **thread_**	\\
+​	pid_t **tid_**	\\
+​	fucntion<void()> **func_**	\\
+​	string **name_**	\\
+​	atomic_int **numCreated_**	\\
 
 <font color=blue>**EventLoopThread**</font>(functional<void(EventLoop*)> &cb, string &name)
 
