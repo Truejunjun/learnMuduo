@@ -148,7 +148,7 @@
 
 > 实际上，`Acceptor`在构造时设置了回调函数为自身的`Acceptor::handleRead()`，而`handleRead()`中关键执行了`newConnectionCallback`，而这个回调函数实际上是由`TcpServer`设置的自身的`TcpServer::newConnection`函数。而这个函数实际上是完成了`TcpConnection`的创建和设置，最终执行`TcpConnection::connectEstablished`
 >
-> <img src="C:\Users\Admin\AppData\Roaming\Typora\typora-user-images\image-20240625221147738.png" alt="image-20240625221147738" style="zoom:80%;" />
+> https://github.com/Truejunjun/learnMuduo/pictures/新用户链接梳理.png
 
 **监听后建立新连接：**Poller监听到链接客户端的`connfd`，执行相应回调`newConnectionCallback_(connfd, peerAddr)`，该函数则首先通过轮询方法指定一个`subLoop（ioLoop）`，然后通过`connfd`获取链接的ip和端口号，创建新的`TcpConnection`类，封装`connfd`，最后完成回调函数的设置。最后走到`TcpConnection`中的`connectEstablished()`函数中。
 
@@ -162,7 +162,7 @@
 
 > TcpServer就完成了connection的删除,具体channel的操作是由TcpConnection完成的
 
-<img src="C:\Users\Admin\AppData\Roaming\Typora\typora-user-images\image-20240623171512358.png" alt="image-20240623171512358" style="zoom:80%;" />
+https://github.com/Truejunjun/learnMuduo/pictures/模块交互梳理.png
 
 
 
