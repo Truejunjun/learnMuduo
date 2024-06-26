@@ -34,8 +34,10 @@ void Socket::listen()
 int Socket::accept(InetAddress *peeraddr)
 {
     sockaddr_in addr;
+    socklen_t len = sizeof addr;
     bzero(&addr, sizeof addr);
-    int confd = ::accept(sockfd_, (sockaddr*)&addr, &len);
+    // 相比原来的accept多了一个flag参数
+    int confd = ::accept4(sockfd_, (sockaddr*)&addr, &len, SOCK_NONBLOCK | SOCK_CLOEXEC);
     if (confd >= 0)
     {
         peeraddr->setSockAddr(addr);

@@ -20,7 +20,8 @@ TcpServer::TcpServer(EventLoop* loop, const InetAddress &listenAddr, const std::
     threadPool_(new EventLoopThreadPool(loop, name_)),  // 默认只有主线程
     connectionCallback_(),  // 还缺默认调用，后面写？？？
     messageCallback_(),
-    nextConnId_(1)
+    nextConnId_(1),
+    started_(0) // 保证整个start只被启动一次
 {
     // 两个占位符，connfd和peerAddr,当有新用户连接时就会执行回调函数
     acceptor_->setNewConnectionCallback(std::bind(&TcpServer::newConnection, this,
