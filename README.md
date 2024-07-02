@@ -1,11 +1,12 @@
 # learnMuduo 🌏
 该工程主要记录本人学习Muduo项目过程中的核心代码，核心代码已完成，但是可能存在Bug，后续编译时会解决。🐖     
 
-项目描述：muduo库是Linux下基于C/C++实现的高性能网络库。该项目通过C++11复现了muduo库的核心部分，不再依赖于原有的boost库，通过高效的multi-Reactor模型构建聊天服务器。能达到......的性能。
+项目描述：muduo库是Linux下基于C/C++实现的高性能网络库。该项目通过C++11复现了muduo库的核心部分，不再依赖于原有的boost库，通过高效的multi-Reactor模型构建聊天服务器。能达到......的性能。    
+
 主要工作：
-- 手撕剖析了核心组件TcpServer、EventLoop、Channel、TcpConnection、Poller、EventLoopThreadPool等交互关系，了解高效的Reactor工作逻辑
-- 通过封装回调函数、原子变量、派生实现等经典的项目开发技巧构建核心代码
-- 通过LOG日志、const、static等关键词完善代码，提升muduo库的使用调试解释性和鲁棒性
+	- 手撕剖析了核心组件TcpServer、EventLoop、Channel、TcpConnection、Poller、EventLoopThreadPool等交互关系，了解高效的Reactor工作逻辑
+	- 通过封装回调函数、原子变量、派生实现等经典的项目开发技巧构建核心代码
+	- 通过LOG日志、const、static等关键词完善代码，提升muduo库的使用调试解释性和鲁棒性
 
 # 快速使用 🔧
 可以通过执行`autobuild.sh`直接完成代码的编译。
