@@ -5,8 +5,8 @@
 
 **主要工作**：    
 - 手撕剖析了核心组件TcpServer、EventLoop、Channel、TcpConnection、Poller、EventLoopThreadPool等交互关系，了解高效的Reactor工作逻辑
-- 通过封装回调函数、原子变量、派生实现等经典的项目开发技巧构建核心代码
-- 通过LOG日志、const、static等关键词完善代码，提升muduo库的使用调试解释性和鲁棒性
+- 通过封装回调函数、原子变量、派生实现、IO多路复用等经典的项目开发技巧构建核心代码
+- 通过LOG日志、const、static等关键词完善代码，提升muduo库的使用调试解释性和健壮性
 
 # 快速使用 🔧
 可以通过执行`autobuild.sh`直接完成代码的编译。

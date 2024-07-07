@@ -55,7 +55,7 @@ private:
 	}
 	
 	// 专门处理用户的读写事件
-	void onMessage(const TcpConnectionPtr &conn，// 链接
+	void onMessage(const TcpConnectionPtr &conn,// 链接
     				Buffer *buffer,
     				Timestamp time)	//	接收到数据的时间信息
     {
