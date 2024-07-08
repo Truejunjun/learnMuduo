@@ -12,6 +12,9 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/include)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/include/server)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/include/server/db)
+set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/include/server/model)
+# 如果不行则尝试以下语句
+# include_directories(${PROJECT_SOURCE_DIR}/bin)
 
 # 加载源文件子目录
 add_subdirectory(src)

@@ -5,9 +5,12 @@
 #include <unordered_map>
 #include <functional>
 #include <mutex>
+
 #include "json.hpp"
 #include "userModel.hpp"
 #include "offLineMessageModel.hpp"
+#include "friendModel.hpp"
+#include "groupModel.hpp"
 
 using namespace std;
 using namespcace muduo;
@@ -30,7 +33,16 @@ public:
 
     // 一对一聊天业务
     void oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time);
-
+    // 添加好友业务
+    void addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time);
+    // 创建群组
+    void createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time);
+    // 加入群组
+    void addGroup(const TcpConnectionPtr &conn, json &js, Timestamp time);
+    // 群组聊天业务
+    void groupChat(const TcpConnectionPtr &conn, json &js, Timestamp time);
+    // 处理注销业务
+    void loginOut(const TcpConnectionPtr &conn, json &js, Timestamp time);
 
     // 获取消息对应的处理器
     MsgHandler getHandler(int);
@@ -51,6 +63,8 @@ private:
     // 数据操作类对象，提供的都是数据库的对象，而不是字段
     UserModel _userModel;                   // 普通user的数据库操作函数
     OfflineMsgModel _offlineMsgModel;       // 离线消息的数据库操作函数
+    FriendModel _friendModel;               // 好友相关的数据库操作函数
+    GroupModel _groupModel;                 // 群组相关的数据库操作函数
 
     mutex _connMutex;   // 定义互斥锁，保证_userConnMap的线程安全
 };

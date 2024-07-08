@@ -19,9 +19,6 @@ public:
 
     // 重置用户的状态信息
     void resetState();
-
-private:
-
 };
 
 #endif

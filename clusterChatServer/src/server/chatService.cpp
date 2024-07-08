@@ -2,6 +2,7 @@
 #include "public.hpp"
 #include <string>
 #include <vector>
+#include <map>
 #include <muduo/base/Logging.h>
 using namespace muduo;
 using namespace placeholders;
@@ -19,6 +20,13 @@ ChatService::ChatService()
     _msgHandlerMap.insert({LOGIN_MSG, std::bind(&ChatService::login(), this, _1, _2, _3)});
     _msgHandlerMap.insert({REG_MSG, std::bind(&ChatService::login(), this, _1, _2, _3)});
     _msgHandlerMap.insert({ONE_CHAT_MSG, std::bind(&ChatService::oneChat(), this, _1, _2, _3)});
+    _msgHandlerMap.insert({ADD_FRIEND_MSG, std::bind(&ChatService::addFriend(), this, _1, _2, _3)});
+
+    _msgHandlerMap.insert({CREATE_GROUP_MSG, std::bind(&ChatService::createGroup(), this, _1, _2, _3)});
+    _msgHandlerMap.insert({ADD_GROUP_MSG, std::bind(&ChatService::addGroup(), this, _1, _2, _3)});
+    _msgHandlerMap.insert({GROUP_CHAT_MSG, std::bind(&ChatService::groupChat(), this, _1, _2, _3)});
+
+    _msgHandlerMap.insert({LOGINOUT_MSG, std::bind(&ChatService::loginOut(), this, _1, _2, _3)});
 }
 
 
@@ -58,7 +66,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             json response;
             response["msgid"] = LOGIN_MSG_ACK;
             response["errno"] = 2;  // 有错
-            response["errmsg"] = "该账号已登录";
+            response["errmsg"] = "This account is using, input another";
             conn->send(response.dump());
         }
         else
@@ -82,10 +90,55 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time)
             vector<string> offlineMsgVec = _offlineMsgModel.query(id);
             if (!offlineMsgVec.empty())
             {
-                response["offlinemsg"] = vec;
+                response["offlinemsg"] = offlineMsgVec;
                 _offlineMsgModel.remove(id);    // 把离线消息缓存删掉
             }
 
+
+            // 返回好友列表
+            vector<User> userVec = _friendModel.query(id);
+            if (!userVec.empty())
+            {
+                vector<string> vec2;
+                for (User &user : userVec)
+                {
+                    json js;
+                    js["id"] = user.getId();
+                    js["name"] = user.getName();
+                    js["state"] = user.getState();
+                    vec2.push_back(js.dump());
+                }
+                response["friends"] = vec2;
+            }
+
+            // 返回群组信息
+            Vector<Group> groupuserVec = _groupModel.query(id);
+            if (!groupuserVec.empty())
+            {
+                // group:[{groupid:[xxx, xxx, xxx, xxx]}]
+                vector<string> groupVec;
+                for (Group &group : groupuserVec)
+                {
+                    json grpjson;
+                    grpjson["id"] = group.getId();
+                    grpjson["groupname"] = group.getName();
+                    grpjson["groupdesc"] = group.getDesc();
+                    vector<string> userVec2;
+                    for(GroupUser &user : group.getUsers())
+                    {
+                        json js;
+                        js["id"] = user.getId();
+                        js["name"] = user.getName();
+                        js["state"] = user.getState();
+                        js["role"] = user.getRole();
+                        userVec2.push_back(js.dump());
+                    }
+                    grpjson["users"] = userVec2;
+                    groupVec.push_back(grpjson.dump());
+                }     
+                response["groups"] = groupVec;
+            }
+            
             conn->send(response.dump());
         }
     }
@@ -180,4 +233,92 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
 void ChatService::reset()
 {
     _userModel.resetState();
+}
+
+
+// 添加好友业务
+void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time)
+{
+    int userid = js["id"].get<int>();
+    int friendid = js["friendid"].get<int>();
+
+    // 存储好友信息
+    _friendModel.insert(userid, friendid);
+}
+
+
+
+// 创建群组业务
+void ChatService::createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time)
+{
+    int userid = js["id"].get<int>();
+    string name = js["groupname"];
+    string desc = js["groupdesc"];
+
+    // 存储新创建的群组信息
+    Group group(-1, name, desc);
+    if (_groupModel.createGroup(group))
+    {
+        // 存储群组创建人信息
+        _groupModel.addGroup(userid, group.getId(), "creator");
+    }
+}
+
+// 加入群组业务
+void ChatService::addGroup(const TcpConnectionPtr &conn, json &js, Timestamp time)
+{
+    int userid = js["id"].get<int>();
+    int groupid = js["groupid"].get<int>();
+    _groupModel.addGroup(userid, groupid, "normal");
+}
+
+
+// 群组聊天业务
+void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp time)
+{
+    int userid = js["id"].get<int>();
+    int groupid = js["groupid"].get<int>();
+    vector<int> useridVec = _groupModel.queryGroupUsers(userid, groupid);
+
+    lock_guard<mutex> lock(_connMutex);
+    for (int id : useridVec)
+    {
+        auto it = _userConnMap.find(id);
+        if (it != _userConnMap.end())
+        {
+            // 转发群聊信息
+            it->second->send(js.dump());
+        }
+        else
+        {
+            // 存储离线群消息
+            _offlineMsgModel.insert(id, js.dump());
+        }
+    }
+}
+
+
+// 登出业务
+void ChatService::loginOut(const TcpConnectionPtr &conn, json &js, Timestamp time)
+{
+    int userid = js["id"].get<int>();
+
+    {
+        lock_guard<mutex> lock(_connMutex);
+        auto it = _userConnMap.find(userid);
+        if (it != _userConnMap.end())
+        {
+            _userConnMap.erase(it);
+        }
+    }
+
+    // user.setId(userid);
+    User user(userid, "", "", "offline");
+
+    // 更新用户的状态信息
+    _userModel.updateState(user);
+
+
+    int groupid = js["groupid"].get<int>();
+    vector<int> useridVec = _groupModel.queryGroupUsers(userid, groupid);
 }
