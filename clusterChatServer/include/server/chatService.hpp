@@ -6,6 +6,7 @@
 #include <functional>
 #include <mutex>
 
+#include "redis.hpp"
 #include "json.hpp"
 #include "userModel.hpp"
 #include "offLineMessageModel.hpp"
@@ -67,6 +68,9 @@ private:
     GroupModel _groupModel;                 // 群组相关的数据库操作函数
 
     mutex _connMutex;   // 定义互斥锁，保证_userConnMap的线程安全
+
+    // redis操作对象
+    Redis _redis;
 };
 
 #endif
